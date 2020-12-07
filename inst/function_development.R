@@ -4,7 +4,7 @@ library(airportr)
 
 # requried data ----
 
-# from https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019 - "Conversion factors 2019: full set (for advanced users)" - Business Air Travel tab
+  # from https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019 - "Conversion factors 2019: full set (for advanced users)" - Business Air Travel tab
 load("R/calculations.Rdata")
 
 data(airports) #from `airportr`
