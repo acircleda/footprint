@@ -4,7 +4,8 @@
 \name{conversion_factors}
 \alias{conversion_factors}
 \title{Emission conversion factors per flight type.}
-\format{A data frame with 20 rows and 10 variables:
+\format{
+A data frame with 20 rows and 10 variables:
 \describe{
 \item{distance}{flight distance category}
 \item{flightclass}{flight class category}
@@ -16,7 +17,8 @@
 \item{co2_norf}{}
 \item{ch4_norf}{}
 \item{n20-norf}{}
-}}
+}
+}
 \source{
 \url{https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019}
 }

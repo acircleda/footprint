@@ -2,26 +2,36 @@
 % Please edit documentation in R/calculations.R
 \name{airport_footprint}
 \alias{airport_footprint}
-\title{Calculate emissions per flight distance and type}
+\title{Calculate emissions per flight distance and type using IATA airport codes}
 \usage{
-airport_footprint(departure, arrival, flightClass = "Unknown",
-  output = "co2e")
+airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
 }
 \arguments{
 \item{departure}{{character} IATA code for outbound destination}
 
 \item{arrival}{{character} IATA code for inbound destination}
 
-\item{flightClass}{{character} flight class category, one of ""Unknown",  "Economy",
-"Economy+", "Business" or "First"}
+\item{flightClass}{{character} flight class category, one of "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default.}
 
-\item{output}{{character} emissions metric of the output}
+\item{output}{{character} emissions metric of the output. For matrics that include radiative forcing, one of
+\itemize{
+\item "co2e" (carbon dioxide equivalent with radiative forcing) - default
+\item "co2" (carbon dioxide with radiative forcing)
+\item "ch4" (methane with radiative forcing)
+\item "n20" (nitrous oxide with radiative forcing)
+\item Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n02_norf".
+#'
+}}
 }
 \value{
-numeric
+a single numeric value expressed in kilograms
 }
 \description{
-Calculate emissions per flight distance and type
+Calculate emissions per flight distance and type using IATA airport codes
+}
+\details{
+more info
+more more
 }
 \examples{
 airport_footprint("LAX", "PUS")

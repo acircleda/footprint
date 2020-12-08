@@ -2,11 +2,16 @@
 #'
 #' @param departure {character} IATA code for outbound destination
 #' @param arrival {character} IATA code for inbound destination
-#' @param flightClass {character} flight class category, one of "Unknown",  "Economy",
-#'   "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default
-#' @param output {character} emissions metric of the output, one of "co2e", "co2", "ch4", "n20", "co2e_norf", "co2_norf", "ch4_norf", "n02_norf"
-#'
-#' @return numeric
+#' @param flightClass {character} flight class category, one of "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default.
+#' @param output {character} emissions metric of the output. For matrics that include radiative forcing, one of
+#' - "co2e" (carbon dioxide equivalent with radiative forcing) - default
+#' - "co2" (carbon dioxide with radiative forcing)
+#' - "ch4" (methane with radiative forcing)
+#' - "n20" (nitrous oxide with radiative forcing)
+#' - Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n02_norf".
+#' #'
+#' @return a single numeric value expressed in kilograms
+#' @details The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affiars (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
 #' @export
 #'
 #' @examples
