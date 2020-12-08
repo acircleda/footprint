@@ -2,4 +2,5 @@
 
 export("%>%")
 export(airport_footprint)
+export(latlong_footprint)
 importFrom(magrittr,"%>%")

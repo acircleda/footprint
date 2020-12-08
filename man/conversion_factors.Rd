@@ -12,11 +12,11 @@ A data frame with 20 rows and 10 variables:
 \item{co2e}{}
 \item{co2}{}
 \item{ch4}{}
-\item{n20}{}
+\item{n2o}{}
 \item{co2e_norf}{}
 \item{co2_norf}{}
 \item{ch4_norf}{}
-\item{n20-norf}{}
+\item{n2o-norf}{}
 }
 }
 \source{
@@ -27,6 +27,6 @@ conversion_factors
 }
 \description{
 A dataset containing information on emission conversion factors
-considering a flight type and distance flown
+considering flight type and distance flown
 }
 \keyword{datasets}
