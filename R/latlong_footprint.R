@@ -20,8 +20,8 @@
 #' latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638)
 #' latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First")
 #' latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First", "ch4")
-#' latlong_footprint("34.052235, -118.243683, 35.179554, 129.075638, output = "ch4")
-#' data %>% rowwise() %>% mutate(co2e = from_lat, from_long, to_lat, to_long, "Economy")
+#' latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, output = "ch4")
+#' data %>% rowwise() %>% mutate(emissions = from_lat, from_long, to_lat, to_long, "Economy")
 
 latlong_footprint <- function(departure_lat, departure_long, arrival_lat, arrival_long, flightClass = "Unknown", output = "co2e") {
 

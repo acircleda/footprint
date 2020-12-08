@@ -43,3 +43,10 @@ Calculate emissions per flight distance and type using latitude and longitude
 \details{
 The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affiars (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
 }
+\examples{
+latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638)
+latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First")
+latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First", "ch4")
+latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, output = "ch4")
+data \%>\% rowwise() \%>\% mutate(emissions = from_lat, from_long, to_lat, to_long, "Economy")
+}
