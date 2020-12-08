@@ -1,10 +1,10 @@
-#' Calculate emissions per flight distance and type
+#' Calculate emissions per flight distance and type using IATA airport codes
 #'
 #' @param departure {character} IATA code for outbound destination
 #' @param arrival {character} IATA code for inbound destination
-#' @param flightClass {character} flight class category, one of ""Unknown",  "Economy",
-#'   "Economy+", "Business" or "First"
-#' @param output {character} emissions metric of the output
+#' @param flightClass {character} flight class category, one of "Unknown",  "Economy",
+#'   "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default
+#' @param output {character} emissions metric of the output, one of "co2e", "co2", "ch4", "n20", "co2e_norf", "co2_norf", "ch4_norf", "n02_norf"
 #'
 #' @return numeric
 #' @export
@@ -13,6 +13,7 @@
 #' airport_footprint("LAX", "PUS")
 #' airport_footprint("LAX", "PUS", "First")
 #' airport_footprint("LAX", "PUS", "First", "ch4")
+
 airport_footprint <-
   function(departure,
            arrival,
@@ -35,5 +36,5 @@ airport_footprint <-
       dplyr::pull(output)
 
     #calculate output
-    distance_vector * emissions_vector
+    round(distance_vector * emissions_vector,3)
   }
