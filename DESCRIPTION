@@ -8,9 +8,18 @@ Authors@R:
            email = "first.last@example.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Calculate carbon footprint from air travel..
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+License: CC0
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Depends:
+    R (>= 2.10)
+Suggests: 
+    testthat (>= 2.1.0)
+Imports: 
+    airportr,
+    magrittr,
+    dplyr,
+    tibble,
+    rlang
