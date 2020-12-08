@@ -24,13 +24,13 @@ latlong_footprint(
 
 \item{flightClass}{{character} flight class category, one of "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default.}
 
-\item{output}{{character} emissions metric of the output. For matrics that include radiative forcing, one of
+\item{output}{{character} emissions metric of the output. For metrics that include radiative forcing, one of
 \itemize{
 \item "co2e" (carbon dioxide equivalent with radiative forcing) - default
 \item "co2" (carbon dioxide with radiative forcing)
 \item "ch4" (methane with radiative forcing)
-\item "n20" (nitrous oxide with radiative forcing)
-\item Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n02_norf".
+\item "n2o" (nitrous oxide with radiative forcing)
+\item Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n2o_norf".
 #'
 }}
 }
