@@ -96,20 +96,20 @@ data(airports) #from `airportr`
         dlat = lat2 - lat1
         a = (sin(dlat/2))^2 + cos(lat1) * cos(lat2) * (sin(dlon/2))^2
         b = 2 * atan2(sqrt(a), sqrt(1 - a))
-        d = radius * b
+        distance = radius * b
 
       #get distance in km
-      distance_vector <- d
+      # distance_vector <- d
 
       #get distance type (long, short, domestic/medium)
-      distance_type <- ifelse(distance_vector <= 483, "short",
-                              ifelse(distance_vector >= 3700, "long", "medium"))
+      distance_type <- ifelse(distance <= 483, "short",
+                              ifelse(distance >= 3700, "long", "medium"))
 
       #set flight class
       flightclass_vector <- flightClass
 
       #find correct calculation value
-      emissions_table <- calculations %>%
+      emissions_table <- conversion_factors %>%
         filter(distance == distance_type) %>%
         filter(flightclass == flightclass_vector) %>%
         select(output) %>%
@@ -120,7 +120,7 @@ data(airports) #from `airportr`
 
 
       #calculate
-      emissions_calc <- distance_vector*emissions_vector
+      emissions_calc <- distance*emissions_vector
 
       #return co2 in metric tons
       emissions_calc

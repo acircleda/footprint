@@ -15,9 +15,11 @@
 #' @export
 #'
 #' @examples
-#' airport_footprint("LAX", "PUS")
-#' airport_footprint("LAX", "PUS", "First")
-#' airport_footprint("LAX", "PUS", "First", "ch4")
+#' airport_footprint("LAX", "LHR")
+#' airport_footprint("LAX", "LHR", "First")
+#' airport_footprint("LAX", "LHR", "First", "ch4")
+#' airport_footprint("LAX", "LHR", output = "ch4")
+#' data %>% rowwise() %>% mutate(co2e = to, from, "Economy")
 
 airport_footprint <-
   function(departure,
