@@ -5,7 +5,7 @@ Authors@R: c(person("Anthony", "Schmidt", role = c("aut", "cre"),
                      email = "aschmi11@utk.edu",
                      comment = c(ORCID = "0000-0003-4478-0638") ),
               person("Kasia", "Kulma", role = "aut",
-                     email = "your@email.net"))
+                     email = "katarzyna.kulma@gmail.com"))
 Description: This package allows you to calculate carbon footprints from air travel based on IATA airport code or latitude and longitude.
 License: CC0
 Encoding: UTF-8
@@ -20,5 +20,4 @@ Imports:
     airportr,
     magrittr,
     dplyr,
-    tibble,
     rlang

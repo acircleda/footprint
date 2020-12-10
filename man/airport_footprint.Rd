@@ -4,7 +4,8 @@
 \alias{airport_footprint}
 \title{Calculate emissions per flight distance and type using IATA airport codes}
 \usage{
-airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
+airport_footprint(departure, arrival, flightClass = "Unknown",
+  output = "co2e")
 }
 \arguments{
 \item{departure}{{character} IATA code for outbound destination}
@@ -20,7 +21,6 @@ airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
 \item "ch4" (methane with radiative forcing)
 \item "n2o" (nitrous oxide with radiative forcing)
 \item Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n2o_norf".
-#'
 }}
 }
 \value{
@@ -37,5 +37,4 @@ airport_footprint("LAX", "LHR")
 airport_footprint("LAX", "LHR", "First")
 airport_footprint("LAX", "LHR", "First", "ch4")
 airport_footprint("LAX", "LHR", output = "ch4")
-data \%>\% rowwise() \%>\% mutate(co2e = to, from, "Economy")
 }

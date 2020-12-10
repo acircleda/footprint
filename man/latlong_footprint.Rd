@@ -4,14 +4,8 @@
 \alias{latlong_footprint}
 \title{Calculate emissions per flight distance and type using latitude and longitude}
 \usage{
-latlong_footprint(
-  departure_lat,
-  departure_long,
-  arrival_lat,
-  arrival_long,
-  flightClass = "Unknown",
-  output = "co2e"
-)
+latlong_footprint(departure_lat, departure_long, arrival_lat, arrival_long,
+  flightClass = "Unknown", output = "co2e")
 }
 \arguments{
 \item{departure_lat}{{numeric} latitude of outbound destination}
@@ -48,5 +42,4 @@ latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638)
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First")
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First", "ch4")
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, output = "ch4")
-data \%>\% rowwise() \%>\% mutate(emissions = from_lat, from_long, to_lat, to_long, "Economy")
 }
