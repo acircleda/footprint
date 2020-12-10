@@ -54,8 +54,25 @@ latlong_footprint <-
            arrival_long,
            flightClass = "Unknown",
            output = "co2e") {
-    # calculate distance (method from airportr)
 
+    # input valudation
+    if (!(all(is.numeric(c(departure_long, arrival_long))) &&
+          departure_long >= -180 &&
+          arrival_long >= -180 &&
+          departure_long <= 180 &&
+          arrival_long <= 180)) {
+      stop("Airport longitude must be numeric and has values between -180 and 180")
+    }
+
+    if (!(all(is.numeric(c(departure_lat, arrival_lat))) &&
+        departure_lat >= -90 &&
+        arrival_lat >= -90 &&
+        departure_lat <= 90 &&
+        arrival_lat <= 90)) {
+      stop("Airport latitude must be numeric and has values between -90 and 90")
+    }
+
+    # calculate distance (method from airportr)
     lon1 = departure_long * pi / 180
     lat1 = departure_lat * pi / 180
     lon2 = arrival_long * pi / 180
