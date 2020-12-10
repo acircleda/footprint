@@ -2,19 +2,18 @@
 % Please edit documentation in R/airport_footprint.R
 \name{airport_footprint}
 \alias{airport_footprint}
-\title{Calculate emissions per flight distance and type using IATA airport codes}
+\title{Calculate flight emissions based on airport code pairs}
 \usage{
-airport_footprint(departure, arrival, flightClass = "Unknown",
-  output = "co2e")
+airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
 }
 \arguments{
-\item{departure}{{character} IATA code for outbound destination}
+\item{departure}{a character vector naming one or more three-letter IATA airport codes for outbound destination}
 
-\item{arrival}{{character} IATA code for inbound destination}
+\item{arrival}{a character vector naming one or more three-letter IATA airport codes for inbound destination}
 
-\item{flightClass}{{character} flight class category, one of "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default.}
+\item{flightClass}{a character vector naming one or more flight class categories. Must be of the following "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default and represents the average passenger.}
 
-\item{output}{{character} emissions metric of the output. For metrics that include radiative forcing, one of
+\item{output}{a single character argument naming the emissions metric of the output. For metrics that include radiative forcing, one of
 \itemize{
 \item "co2e" (carbon dioxide equivalent with radiative forcing) - default
 \item "co2" (carbon dioxide with radiative forcing)
@@ -24,17 +23,31 @@ airport_footprint(departure, arrival, flightClass = "Unknown",
 }}
 }
 \value{
-a single numeric value expressed in kilograms
+a numeric value expressed in kilograms of chosen metric
 }
 \description{
-Calculate emissions per flight distance and type using IATA airport codes
+A function that calculates emissions per flight based on pairs of IATA airport codes, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
 }
 \details{
-The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affiars (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
+Distances between airports are based on the Haversine great-circle distane formula, which assumes a spherical earth. They are calculated using the \code{airportr} package. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
 }
 \examples{
+
+# Calculations based on individual flights
 airport_footprint("LAX", "LHR")
 airport_footprint("LAX", "LHR", "First")
 airport_footprint("LAX", "LHR", "First", "ch4")
 airport_footprint("LAX", "LHR", output = "ch4")
+
+# Calculations based on a data frame of flights
+library(tidyverse)
+travel_data <- data.frame(name=c("Mike", "Will", "Elle"),
+                          from=c("lax", "LGA", "TYS"),
+                         to=c("PUS", "LHR", "TPA"),
+                         class=c("Economy", "Economy+", "Business")
+                         )
+
+travel_data \%>\%
+   rowwise() \%>\%
+   mutate(emissions = airport_footprint(from, to, flightClass = class, output="co2e"))
 }
