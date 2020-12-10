@@ -4,14 +4,8 @@
 \alias{latlong_footprint}
 \title{Calculate flight emissions based on longitude and latitude pairs}
 \usage{
-latlong_footprint(
-  departure_lat,
-  departure_long,
-  arrival_lat,
-  arrival_long,
-  flightClass = "Unknown",
-  output = "co2e"
-)
+latlong_footprint(departure_lat, departure_long, arrival_lat, arrival_long,
+  flightClass = "Unknown", output = "co2e")
 }
 \arguments{
 \item{departure_lat}{a numeric vector of one or more latitudes for departure location}
@@ -50,8 +44,10 @@ latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First")
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First", "ch4")
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, output = "ch4")
 
+\dontrun{
 # Calculations based on a data frame of flight
-library(tidyverse)
+library(dplyr)
+library(tibble)
 
 travel_data <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~arrival_long,
      # Los Angeles -> Busan
@@ -61,5 +57,10 @@ travel_data <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~ar
 
 travel_data \%>\%
   rowwise() \%>\%
-  mutate(emissions = latlong_footprint(departure_lat, departure_long, arrival_lat, arrival_long, output="co2e"))
+  mutate(emissions = latlong_footprint(departure_lat,
+                                       departure_long,
+                                       arrival_lat,
+                                       arrival_long,
+                                       output="co2e"))
+  }
 }

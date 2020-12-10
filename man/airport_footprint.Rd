@@ -4,7 +4,8 @@
 \alias{airport_footprint}
 \title{Calculate flight emissions based on airport code pairs}
 \usage{
-airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
+airport_footprint(departure, arrival, flightClass = "Unknown",
+  output = "co2e")
 }
 \arguments{
 \item{departure}{a character vector naming one or more three-letter IATA airport codes for outbound destination}
@@ -39,15 +40,19 @@ airport_footprint("LAX", "LHR", "First")
 airport_footprint("LAX", "LHR", "First", "ch4")
 airport_footprint("LAX", "LHR", output = "ch4")
 
+\dontrun{
 # Calculations based on a data frame of flights
-library(tidyverse)
+library(dplyr)
 travel_data <- data.frame(name=c("Mike", "Will", "Elle"),
-                          from=c("lax", "LGA", "TYS"),
+                          from=c("LAX", "LGA", "TYS"),
                          to=c("PUS", "LHR", "TPA"),
                          class=c("Economy", "Economy+", "Business")
                          )
 
 travel_data \%>\%
    rowwise() \%>\%
-   mutate(emissions = airport_footprint(from, to, flightClass = class, output="co2e"))
+   mutate(emissions = airport_footprint(from, to,
+                                        flightClass = class,
+                                        output="co2e"))
+                                        }
 }
