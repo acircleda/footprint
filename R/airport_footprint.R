@@ -1,35 +1,59 @@
-#' Calculate emissions per flight distance and type using IATA airport codes
+#' Calculate flight emissions based on airport code pairs
 #'
-#' @param departure {character} IATA code for outbound destination
-#' @param arrival {character} IATA code for inbound destination
-#' @param flightClass {character} flight class category, one of "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default.
-#' @param output {character} emissions metric of the output. For metrics that include radiative forcing, one of
+#'@description A function that calculates emissions per flight based on pairs of IATA airport codes, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
+#'
+#' @param departure a character vector naming one or more three-letter IATA airport codes for outbound destination
+#' @param arrival a character vector naming one or more three-letter IATA airport codes for inbound destination
+#' @param flightClass a character vector naming one or more flight class categories. Must be of the following "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default and represents the average passenger.
+#' @param output a single character argument naming the emissions metric of the output. For metrics that include radiative forcing, one of
 #' - "co2e" (carbon dioxide equivalent with radiative forcing) - default
 #' - "co2" (carbon dioxide with radiative forcing)
 #' - "ch4" (methane with radiative forcing)
 #' - "n2o" (nitrous oxide with radiative forcing)
 #' - Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n2o_norf".
 #'
-#' @return a single numeric value expressed in kilograms
-#' @details The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affiars (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
+#' @return a numeric value expressed in kilograms of chosen metric
+#' @details Distances between airports are based on the Haversine great-circle distane formula, which assumes a spherical earth. They are calculated using the `airportr` package. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
 #' @importFrom rlang .data
+#' @import airportr
 #'
 #' @export
 #'
 #' @examples
+#'
+#' # Calculations based on individual flights
 #' airport_footprint("LAX", "LHR")
 #' airport_footprint("LAX", "LHR", "First")
 #' airport_footprint("LAX", "LHR", "First", "ch4")
 #' airport_footprint("LAX", "LHR", output = "ch4")
+#'
+#'\dontrun{
+#' # Calculations based on a data frame of flights
+#' library(dplyr)
+#' travel_data <- data.frame(name=c("Mike", "Will", "Elle"),
+#'                           from=c("LAX", "LGA", "TYS"),
+#'                          to=c("PUS", "LHR", "TPA"),
+#'                          class=c("Economy", "Economy+", "Business")
+#'                          )
+#'
+#' travel_data %>%
+#'    rowwise() %>%
+#'    mutate(emissions = airport_footprint(from, to,
+#'                                         flightClass = class,
+#'                                         output="co2e"))
+#'                                         }
 
 airport_footprint <-
   function(departure,
            arrival,
            flightClass = "Unknown",
            output = "co2e") {
+    departure <- toupper(departure)
+    arrival <- toupper(arrival)
+
     #get distance in km
-    distance_vector <-
-      airportr::airport_distance(departure, arrival)
+    suppressWarnings(distance_vector <-
+                       airportr::airport_distance(departure, arrival))
 
     #get distance type (long, short, domestic/medium)
     distance_type <-

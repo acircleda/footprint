@@ -2,21 +2,21 @@
 % Please edit documentation in R/latlong_footprint.R
 \name{latlong_footprint}
 \alias{latlong_footprint}
-\title{Calculate emissions per flight distance and type using latitude and longitude}
+\title{Calculate flight emissions based on longitude and latitude pairs}
 \usage{
 latlong_footprint(departure_lat, departure_long, arrival_lat, arrival_long,
   flightClass = "Unknown", output = "co2e")
 }
 \arguments{
-\item{departure_lat}{{numeric} latitude of outbound destination}
+\item{departure_lat}{a numeric vector of one or more latitudes for departure location}
 
-\item{departure_long}{{numeric} longitude of outbound destination}
+\item{departure_long}{a numeric vector of one or more longitudes for outbound location}
 
-\item{arrival_lat}{{numeric} latitude of inbound destination}
+\item{arrival_lat}{a numeric vector of one or more latitudes for arrival location}
 
-\item{arrival_long}{{numeric} longitude of inbound destination}
+\item{arrival_long}{a numeric vector of one or more longitudes for arrival location}
 
-\item{flightClass}{{character} flight class category, one of "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default.}
+\item{flightClass}{a character vector naming one or more flight class categories. Must be of the following "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default and represents the average passenger.}
 
 \item{output}{{character} emissions metric of the output. For metrics that include radiative forcing, one of
 \itemize{
@@ -29,17 +29,38 @@ latlong_footprint(departure_lat, departure_long, arrival_lat, arrival_long,
 }}
 }
 \value{
-a single numeric value expressed in kilograms
+a numeric value expressed in kilograms of chosen metric
 }
 \description{
-Calculate emissions per flight distance and type using latitude and longitude
+A function that calculates emissions per flight based on longitude and latitude, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
 }
 \details{
-The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affiars (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
+Distances between latitude and longitude pairs are based on the Haversine great-circle distance formula, which assumes a spherical earth. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
 }
 \examples{
+# Calculations based on individual flights
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638)
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First")
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First", "ch4")
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, output = "ch4")
+
+\dontrun{
+# Calculations based on a data frame of flight
+library(dplyr)
+library(tibble)
+
+travel_data <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~arrival_long,
+     # Los Angeles -> Busan
+     "Mike", 34.052235, -118.243683, 35.179554, 129.075638,
+     # New York -> London
+     "Will", 40.712776, -74.005974, 51.52, -0.10)
+
+travel_data \%>\%
+  rowwise() \%>\%
+  mutate(emissions = latlong_footprint(departure_lat,
+                                       departure_long,
+                                       arrival_lat,
+                                       arrival_long,
+                                       output="co2e"))
+  }
 }

@@ -3,5 +3,6 @@
 export("%>%")
 export(airport_footprint)
 export(latlong_footprint)
+import(airportr)
 importFrom(magrittr,"%>%")
 importFrom(rlang,.data)

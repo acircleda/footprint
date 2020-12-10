@@ -1,10 +1,12 @@
-#' Calculate emissions per flight distance and type using latitude and longitude
+#' Calculate flight emissions based on longitude and latitude pairs
 #'
-#' @param departure_lat {numeric} latitude of outbound destination
-#' @param departure_long {numeric} longitude of outbound destination
-#' @param arrival_lat {numeric} latitude of inbound destination
-#' @param arrival_long {numeric} longitude of inbound destination
-#' @param flightClass {character} flight class category, one of "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default.
+#' @description   A function that calculates emissions per flight based on longitude and latitude, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
+#'
+#' @param departure_lat a numeric vector of one or more latitudes for departure location
+#' @param departure_long a numeric vector of one or more longitudes for outbound location
+#' @param arrival_lat a numeric vector of one or more latitudes for arrival location
+#' @param arrival_long a numeric vector of one or more longitudes for arrival location
+#' @param flightClass a character vector naming one or more flight class categories. Must be of the following "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default and represents the average passenger.
 #' @param output {character} emissions metric of the output. For metrics that include radiative forcing, one of
 #' - "co2e" (carbon dioxide equivalent with radiative forcing) - default
 #' - "co2" (carbon dioxide with radiative forcing)
@@ -12,17 +14,38 @@
 #' - "n2o" (nitrous oxide with radiative forcing)
 #' - Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n2o_norf".
 #' #'
-#' @return a single numeric value expressed in kilograms
-#' @details The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affiars (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
+#' @return a numeric value expressed in kilograms of chosen metric
+#' @details Distances between latitude and longitude pairs are based on the Haversine great-circle distance formula, which assumes a spherical earth. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
 #' @importFrom rlang .data
 #'
 #' @export
 #'
 #' @examples
+#' # Calculations based on individual flights
 #' latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638)
 #' latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First")
 #' latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First", "ch4")
 #' latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, output = "ch4")
+#'
+#'\dontrun{
+#' # Calculations based on a data frame of flight
+#' library(dplyr)
+#' library(tibble)
+#'
+#' travel_data <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~arrival_long,
+#'      # Los Angeles -> Busan
+#'      "Mike", 34.052235, -118.243683, 35.179554, 129.075638,
+#'      # New York -> London
+#'      "Will", 40.712776, -74.005974, 51.52, -0.10)
+#'
+#'travel_data %>%
+#'   rowwise() %>%
+#'   mutate(emissions = latlong_footprint(departure_lat,
+#'                                        departure_long,
+#'                                        arrival_lat,
+#'                                        arrival_long,
+#'                                        output="co2e"))
+#'   }
 
 latlong_footprint <-
   function(departure_lat,
