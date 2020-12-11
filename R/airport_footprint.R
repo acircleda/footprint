@@ -48,6 +48,19 @@ airport_footprint <-
            arrival,
            flightClass = "Unknown",
            output = "co2e") {
+
+    if (!all(is.character(c(departure, arrival)))) {
+      stop("Airport IATA codes must be a character string")
+    }
+
+    if (!all(nchar(c(departure, arrival)) %in% 2:3)) {
+      stop("Invalid IATA codes: make sure they consist of no more than 3 characters")
+    }
+
+    if (!all(grepl("^([A-Za-z]{2,3})", c(departure, arrival)))) {
+      stop("Invalid IATA codes: make sure they consist only of letters")
+    }
+
     departure <- toupper(departure)
     arrival <- toupper(arrival)
 
