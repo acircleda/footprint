@@ -13,6 +13,8 @@ test_that("airport_footprint() works",
                          tolerance = tol)
             expect_type(airport_footprint("LAX", "PUS"), "double")
             expect_error(airport_footprint("LAX"))
+            expect_error(airport_footprint("LAX", "1HR"))
+            expect_error(airport_footprint("LAXX", "LHR"))
           })
 
 test_that("latlong_footprint() works", {
@@ -25,4 +27,6 @@ test_that("latlong_footprint() works", {
   expect_type(latlong_footprint(34.052235,-118.243683, 35.179554, 129.075638),
               "double")
   expect_error(latlong_footprint(34.052235,-118.243683, 35.179554))
+  expect_error(latlong_footprint(100.052235,-118.243683, 35.179554, 129.075638))
+  expect_error(latlong_footprint(34.052235, -181.243683, 35.179554, 129.075638))
 })
