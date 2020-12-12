@@ -16,9 +16,13 @@ RoxygenNote: 7.1.1
 Depends:
     R (>= 2.10)
 Suggests: 
-    testthat (>= 2.1.0)
+    knitr,
+    testthat (>= 2.1.0),
+    devtools,
+    tibble
 Imports: 
     airportr,
     magrittr,
     dplyr,
     rlang
+VignetteBuilder: knitr
