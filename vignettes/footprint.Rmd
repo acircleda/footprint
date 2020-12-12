@@ -1,0 +1,160 @@
+---
+title: "footprint: Calculate Air Travel Emissions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{footprint_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r setup, eval = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(footprint)
+library(dplyr)
+library(tibble)
+```
+
+```{r load, echo = FALSE}
+library(devtools)
+devtools::load_all()
+library(dplyr)
+library(tibble)
+```
+
+This package offers a handy tool to calculate carbon footprints from air travel based on IATA airport codes or latitude and longitude.
+
+# Data and Calculations
+
+Package `footprint` uses the the Haversine great-circle distance formula to calculate distance between airports or distance between latitude and longitude pairs. This distance is then used to derive a carbon footprint estimate, which is based on converstion factors from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019.
+
+DEFRA's conversion factors are a widely used tool for calculating emissions for a  variety of industries. For business air travel, they consider trip length (domestic, short-haul, long-haul, and international), flight class (e.g. economy, first), and various types of emissions, with and without radiative forcing. 
+
+Their [methodology](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/829336/2019_Green-house-gas-reporting-methodology.pdf) for determining distance states that anything within the UK is “domestic”, and that flights up to 3,700km are “short-haul”. “Long haul” is over 3,700km. “International” flights are those that occur entirely outside of the UK. Neither domestic nor international was clearly defined, so definitions from the [US Environmental Protection Agency](https://www.epa.gov/sites/production/files/2020-04/documents/ghg-emission-factors-hub.pdf) were considered. Based on these two data sources, the `footprint` calculates distance as follows:
+
+```{r include=FALSE}
+distance_definitions <- data.frame(
+  EPA = c("Short-haul", "Medium-haul", "Long-haul"),
+  DEFRA = c("Domestic", "Short-haul", "Long-haul"),
+  Distance = c("< 483 km", "483 to 3,700 km", "> 3700 km")
+) %>%
+  rename("DEFRA/`footprint`" = DEFRA)
+
+```
+
+```{r echo=FALSE}
+distance_definitions %>%
+  knitr::kable()
+```
+
+
+# Key Functions
+
+## From Airport Codes
+
+You can use pairs of three-letter IATA airport codes to calculate distance. This function uses the [`airportr`](https://github.com/dshkol/airportr) package, which contains the data and does the work of getting the distance between airports. *Note*: the `airportr` package offers a number of useful functions for looking up airports by city or name and getting the IATA airport codes.
+
+The `airport_footprint()` functions takes a three-letter IATA code for the departure airport (case insensitive), a three-letter IATA code for the arrival airport (case insensitive), a `flightClass` (e.g. "Economy), and a emissions metric (e.g. "co2e"). The latter two arguments are case sensitive. See `?airport_footprint` for more information on arguments.
+
+### Calculating a Single Trip
+
+The example below calculates a simple footprint estimation for an economy flight from Los Angeles International (LAX) to  Heathrow (LHR). The estimate will be in CO~2~e (carbon dioxide equivalent, including radiative forcing). The output is always in kilograms.
+
+```{r}
+airport_footprint("LAX", "LHR", "Economy", "co2e")
+```
+
+If there is a layover in Chicago, you could calculate each leg of the trip as follows:
+
+```{r}
+airport_footprint("LAX", "ORD", "Economy", "co2e") + 
+  airport_footprint("ORD", "LHR", "Economy", "co2e")
+```
+
+### Calculating More than One Trip
+
+We can calculate the footprint for multiple itineraries at the same time and add to an existing data frame using `mutate`. Here is some example data:
+
+```{r}
+travel_data <- data.frame(name = c("Mike", "Will", "Elle"),
+                          from = c("LAX", "LGA", "TYS"),
+                          to = c("PUS", "LHR", "TPA"))
+```
+
+```{r echo=FALSE}
+travel_data %>% 
+  knitr::kable()
+```
+
+Here is how you can take the `from` and `to` data and calculate emissions for each trip. The following function calculates an estimate for CO~2~ (carbon dioxide with radiative forcing).
+
+```{r eval=FALSE, include=FALSE}
+travel_data %>%
+  rowwise() %>%
+  mutate(emissions = airport_footprint(from, to, "Economy", output = "co2"))
+```
+
+```{r echo=FALSE}
+travel_data %>%
+  rowwise() %>%
+  mutate(emissions = airport_footprint(from, to, "Economy", output = "co2")) %>%
+  knitr::kable()
+```
+
+## From Latitude and Longitude
+
+If you have a list of cities, it might be easier to calculate emissions based on longitude and latitude rather than trying to locate the airports used. For example, one could take city and state data and join that with data from `maps::us.cities` to quickly get latitude and longitude. They can then use the `latlong_footprint()` function to easily calculate emissions based on either a single itinerary or multiple itineraries:
+
+### Calculating a Single Trip
+
+The following example calculates the footprint of a flight from Los Angeles (34.052235, -118.243683) to Busan, South Korea (35.179554, 129.075638). It assumes an average passenger (no `flightClass` argument is included) and its output will be in kilograms of CO~2~e (the default)
+
+```{r}
+latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638)
+```
+
+### Calculating Multiple Trips
+
+You can use `mutate` to calculate emissions based on a dataframe of latitude and longitude pairs.
+
+Here is some example data:
+
+```{r}
+travel_data2 <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~arrival_long,
+         # Los Angeles -> Busan
+        "Mike", 34.052235, -118.243683, 35.179554, 129.075638,
+        # New York -> London
+        "Will", 40.712776, -74.005974, 51.52, -0.10)
+```
+
+```{r echo=FALSE}
+travel_data2 %>% knitr::kable()
+```
+
+And here is code to apply it to a dataframe:
+
+```{r eval=FALSE, include=TRUE}
+travel_data2 %>%
+  rowwise() %>%
+  mutate(emissions = latlong_footprint(departure_lat,
+                                       departure_long,
+                                       arrival_lat,
+                                       arrival_long))
+```
+```{r echo=FALSE}
+travel_data2 %>%
+  rowwise() %>%
+  mutate(emissions = latlong_footprint(departure_lat,
+                                       departure_long,
+                                       arrival_lat,
+                                       arrival_long)) %>%
+  knitr::kable()
+```
+

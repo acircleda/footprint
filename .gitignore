@@ -3,4 +3,7 @@
 .RData
 .Ruserdata
 .xlsx
+.ai
+doc
+Meta
 inst/doc
