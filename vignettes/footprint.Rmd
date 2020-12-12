@@ -2,27 +2,25 @@
 title: "footprint: Calculate Air Travel Emissions"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{footprint_vignette}
+  %\VignetteIndexEntry{footprint: Calculate Air Travel Emissions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, message=FALSE, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE,
+	warning = FALSE
 )
-```
 
-
-```{r setup, eval = FALSE}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 library(footprint)
 library(dplyr)
 library(tibble)
 ```
 
-```{r load, echo = FALSE}
+```{r load, echo=FALSE, message=FALSE, warning=FALSE}
 library(devtools)
 devtools::load_all()
 library(dplyr)
@@ -148,6 +146,8 @@ travel_data2 %>%
                                        arrival_lat,
                                        arrival_long))
 ```
+
+
 ```{r echo=FALSE}
 travel_data2 %>%
   rowwise() %>%
