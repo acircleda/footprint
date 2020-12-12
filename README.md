@@ -3,35 +3,25 @@
 
 # footprint
 
-<p align="center">
-
-<img src="footprint_hex.png" width="150">
-
-</p>
+<img src="man/figures/footprint_hex.png" align="right" height=150/>
 
 The goal of footprint is to calculate carbon footprints from air travel
 based on IATA airport codes or latitude and longitude.
 
 ## Installation
 
-You can install the released version of footprint from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the development version from
+[GitHub](https://github.com/) with:
 
 ``` r
-install.packages("footprint")
-```
-
-And the development version from [GitHub](https://github.com/) with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("acircleda/footprint")
+# install.packages("remotes")
+remotes::install_github("acircleda/footprint")
 ```
 
 ## Data and Methodology
 
-`footprint` uses the the Haversine great-circle distance formula to
-calculate distance between airports or distance between latitude and
+Package `footprint` uses the the Haversine great-circle distance formula
+to calculate distance between airports or distance between latitude and
 longitude pairs. This distance is then used to derive a carbon footprint
 estimate, which is based on converstion factors from the Department for
 Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion
@@ -83,13 +73,15 @@ and add to an existing data frame using `mutate`. Here is some example
 data:
 
 ``` r
-travel_data <- data.frame(name=c("Mike", "Will", "Elle"),
-                          from=c("LAX", "LGA", "TYS"),
-                            to=c("PUS", "LHR", "TPA"))
+travel_data <- data.frame(
+  name = c("Mike", "Will", "Elle"),
+  from = c("LAX", "LGA", "TYS"),
+  to = c("PUS", "LHR", "TPA")
+)
 ```
 
 | name | from | to  |
-| :--- | :--- | :-- |
+| :--- | :--- | :-: |
 | Mike | LAX  | PUS |
 | Will | LGA  | LHR |
 | Elle | TYS  | TPA |
@@ -99,7 +91,7 @@ emissions for each trip. The following function calculates an estimate
 for CO<sub>2</sub> (carbon dioxide with radiative forcing).
 
 | name | from | to  | emissions |
-| :--- | :--- | :-- | --------: |
+| :--- | :--- | :-: | --------: |
 | Mike | LAX  | PUS |  1434.663 |
 | Will | LGA  | LHR |   825.497 |
 | Elle | TYS  | TPA |   136.721 |
@@ -135,6 +127,9 @@ latitude and longitude pairs.
 Here is some example data:
 
 ``` r
+library(tibble)
+#> Warning: package 'tibble' was built under R version 3.6.3
+
 travel_data2 <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~arrival_long,
          # Los Angeles -> Busan
         "Mike", 34.052235, -118.243683, 35.179554, 129.075638,

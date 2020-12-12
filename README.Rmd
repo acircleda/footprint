@@ -12,30 +12,26 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-
-# footprint
-<p align="center"><img src="footprint_hex.png" width="150"></p>
+# footprint 
+<img src="man/figures/footprint_hex.png" align="right" height=150/>
 
 
 The goal of footprint is to calculate carbon footprints from air travel based on IATA airport codes or latitude and longitude.
 
 ## Installation
 
-You can install the released version of footprint from [CRAN](https://CRAN.R-project.org) with:
+You can install the development version from [GitHub](https://github.com/) with:
 
-``` r
-install.packages("footprint")
+```{r, eval = FALSE}
+# install.packages("remotes")
+remotes::install_github("acircleda/footprint")
 ```
-
-And the development version from [GitHub](https://github.com/) with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("acircleda/footprint")
+```{r, echo=FALSE, warning=FALSE}
+devtools::load_all(quiet = TRUE)
 ```
 ## Data and Methodology
 
-`footprint` uses the the Haversine great-circle distance formula to calculate distance between airports or distance between latitude and longitude pairs. This distance is then used to derive a carbon footprint estimate, which is based on converstion factors from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019.
+Package `footprint` uses the the Haversine great-circle distance formula to calculate distance between airports or distance between latitude and longitude pairs. This distance is then used to derive a carbon footprint estimate, which is based on converstion factors from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019.
 
 ## Example Usage
 
@@ -71,31 +67,32 @@ airport_footprint("LAX", "ORD", "Economy", "co2e") +
 We can calculate the footprint for multiple itineraries at the same time and add to an existing data frame using `mutate`. Here is some example data:
 
 ```{r}
-travel_data <- data.frame(name=c("Mike", "Will", "Elle"),
-                          from=c("LAX", "LGA", "TYS"),
-                            to=c("PUS", "LHR", "TPA"))
+travel_data <- data.frame(
+  name = c("Mike", "Will", "Elle"),
+  from = c("LAX", "LGA", "TYS"),
+  to = c("PUS", "LHR", "TPA")
+)
 ```
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-library(tidyverse)
-travel_data %>% 
+library(dplyr)
+
+travel_data %>%
   knitr::kable()
 ```
 
 Here is how you can take the `from` and `to` data and calculate emissions for each trip. The following function calculates an estimate for CO~2~ (carbon dioxide with radiative forcing).
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-library(tidyverse)
-
 travel_data %>%
   rowwise() %>%
-  mutate(emissions = airport_footprint(from, to, "Economy", output="co2"))
+  mutate(emissions = airport_footprint(from, to, "Economy", output = "co2"))
 ```
 
 ```{r echo=FALSE}
 travel_data %>%
   rowwise() %>%
-  mutate(emissions = airport_footprint(from, to, "Economy", output="co2")) %>%
+  mutate(emissions = airport_footprint(from, to, "Economy", output = "co2")) %>%
   knitr::kable()
 ```
 
@@ -118,6 +115,8 @@ You can use `mutate` to calculate emissions based on a dataframe of latitude and
 Here is some example data:
 
 ```{r}
+library(tibble)
+
 travel_data2 <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~arrival_long,
          # Los Angeles -> Busan
         "Mike", 34.052235, -118.243683, 35.179554, 129.075638,
