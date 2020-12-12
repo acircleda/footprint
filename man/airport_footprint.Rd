@@ -4,7 +4,8 @@
 \alias{airport_footprint}
 \title{Calculate flight emissions based on airport code pairs}
 \usage{
-airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
+airport_footprint(departure, arrival, flightClass = "Unknown",
+  output = "co2e")
 }
 \arguments{
 \item{departure}{a character vector naming one or more three-letter IATA airport codes for outbound destination}
