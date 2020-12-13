@@ -4,14 +4,8 @@
 \alias{latlong_footprint}
 \title{Calculate flight emissions based on longitude and latitude pairs}
 \usage{
-latlong_footprint(
-  departure_lat,
-  departure_long,
-  arrival_lat,
-  arrival_long,
-  flightClass = "Unknown",
-  output = "co2e"
-)
+latlong_footprint(departure_lat, departure_long, arrival_lat, arrival_long,
+  flightClass = "Unknown", output = "co2e")
 }
 \arguments{
 \item{departure_lat}{a numeric vector of one or more latitudes for departure location}
