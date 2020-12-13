@@ -8,6 +8,8 @@ Authors@R: c(person("Anthony", "Schmidt", role = c("aut", "cre"),
                      email = "katarzyna.kulma@gmail.com"))
 Description: A handy tool to calculate carbon footprints from 
     air travel based on IATA airport codes or latitude and longitude.
+URL: https://github.com/acircleda/footprint
+BugReports: https://github.com/acircleda/footprint/issues
 License: CC0
 Encoding: UTF-8
 LazyData: true
