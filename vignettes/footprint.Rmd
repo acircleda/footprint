@@ -2,27 +2,22 @@
 title: "footprint: Calculate Air Travel Emissions"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{footprint_vignette}
+  %\VignetteIndexEntry{footprint: Calculate Air Travel Emissions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, message=FALSE, warning=FALSE, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE,
+	warning = FALSE
 )
+
 ```
 
-
-```{r setup, eval = FALSE}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE)
-library(footprint)
-library(dplyr)
-library(tibble)
-```
-
-```{r load, echo = FALSE}
+```{r load, echo=FALSE, message=FALSE, warning=FALSE}
 library(devtools)
 devtools::load_all()
 library(dplyr)
@@ -38,6 +33,12 @@ Package `footprint` uses the the Haversine great-circle distance formula to calc
 DEFRA's conversion factors are a widely used tool for calculating emissions for a  variety of industries. For business air travel, they consider trip length (domestic, short-haul, long-haul, and international), flight class (e.g. economy, first), and various types of emissions, with and without radiative forcing. 
 
 Their [methodology](https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/829336/2019_Green-house-gas-reporting-methodology.pdf) for determining distance states that anything within the UK is “domestic”, and that flights up to 3,700km are “short-haul”. “Long haul” is over 3,700km. “International” flights are those that occur entirely outside of the UK. Neither domestic nor international was clearly defined, so definitions from the [US Environmental Protection Agency](https://www.epa.gov/sites/production/files/2020-04/documents/ghg-emission-factors-hub.pdf) were considered. Based on these two data sources, the `footprint` calculates distance as follows:
+
+```{r, eval=FALSE}
+library(footprint)
+library(dplyr)
+library(tibble)
+```
 
 ```{r include=FALSE}
 distance_definitions <- data.frame(
@@ -83,7 +84,7 @@ airport_footprint("LAX", "ORD", "Economy", "co2e") +
 We can calculate the footprint for multiple itineraries at the same time and add to an existing data frame using `mutate`. Here is some example data:
 
 ```{r}
-travel_data <- data.frame(name = c("Mike", "Will", "Elle"),
+travel_data <- tibble(name = c("Mike", "Will", "Elle"),
                           from = c("LAX", "LGA", "TYS"),
                           to = c("PUS", "LHR", "TPA"))
 ```
@@ -148,6 +149,8 @@ travel_data2 %>%
                                        arrival_lat,
                                        arrival_long))
 ```
+
+
 ```{r echo=FALSE}
 travel_data2 %>%
   rowwise() %>%

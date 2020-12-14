@@ -1,4 +1,10 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/acircleda/footprint/workflows/R-CMD-check/badge.svg)](https://github.com/acircleda/footprint/actions)
+<!-- badges: end -->
 
 # footprint
 
@@ -72,7 +78,10 @@ and add to an existing data frame using `mutate`. Here is some example
 data:
 
 ``` r
-travel_data <- data.frame(
+library(tibble)
+#> Warning: package 'tibble' was built under R version 3.6.3
+
+travel_data <- tibble(
   name = c("Mike", "Will", "Elle"),
   from = c("LAX", "LGA", "TYS"),
   to = c("PUS", "LHR", "TPA")
@@ -126,9 +135,6 @@ latitude and longitude pairs.
 Here is some example data:
 
 ``` r
-library(tibble)
-#> Warning: package 'tibble' was built under R version 3.6.3
-
 travel_data2 <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~arrival_long,
          # Los Angeles -> Busan
         "Mike", 34.052235, -118.243683, 35.179554, 129.075638,
