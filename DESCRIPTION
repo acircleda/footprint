@@ -1,31 +1,38 @@
 Package: footprint
 Title: Calculate Air Travel Emissions
 Version: 0.1
-Authors@R: c(person("Anthony", "Schmidt", role = c("aut", "cre"),
-                     email = "aschmi11@utk.edu",
-                     comment = c(ORCID = "0000-0003-4478-0638") ),
-              person("Kasia", "Kulma", role = "aut",
-                     email = "katarzyna.kulma@gmail.com"))
-Description: A handy tool to calculate carbon footprints from 
+Authors@R: 
+    c(person(given = "Anthony",
+             family = "Schmidt",
+             role = c("aut", "cre"),
+             email = "aschmi11@utk.edu",
+             comment = c(ORCID = "0000-0003-4478-0638")),
+      person(given = "Kasia",
+             family = "Kulma",
+             role = "aut",
+             email = "katarzyna.kulma@gmail.com"))
+Description: A handy tool to calculate carbon footprints from
     air travel based on IATA airport codes or latitude and longitude.
+License: CC0
 URL: https://github.com/acircleda/footprint
 BugReports: https://github.com/acircleda/footprint/issues
-License: CC0
+Depends:
+    R (>= 2.10)
+Imports: 
+    airportr,
+    dplyr,
+    magrittr,
+    rlang
+Suggests: 
+    devtools,
+    knitr,
+    rmarkdown,
+    testthat (>= 2.1.0),
+    tibble,
+    covr
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Depends:
-    R (>= 2.10)
-Suggests: 
-    knitr,
-    testthat (>= 2.1.0),
-    devtools,
-    tibble,
-    rmarkdown
-Imports: 
-    airportr,
-    magrittr,
-    dplyr,
-    rlang
-VignetteBuilder: knitr
