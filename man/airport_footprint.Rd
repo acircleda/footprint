@@ -39,19 +39,19 @@ airport_footprint("LAX", "LHR", "First")
 airport_footprint("LAX", "LHR", "First", "ch4")
 airport_footprint("LAX", "LHR", output = "ch4")
 
-\dontrun{
 # Calculations based on a data frame of flights
 library(dplyr)
-travel_data <- data.frame(name=c("Mike", "Will", "Elle"),
-                          from=c("LAX", "LGA", "TYS"),
-                         to=c("PUS", "LHR", "TPA"),
-                         class=c("Economy", "Economy+", "Business")
-                         )
+library(tibble)
+
+travel_data <- tribble(~name, ~from, ~to, ~class,
+                      "Mike", "LAX", "PUS", "Economy",
+                      "Will", "LGA", "LHR", "Economy+",
+                      "Elle", "TYS", "TPA", "Business")
 
 travel_data \%>\%
    rowwise() \%>\%
    mutate(emissions = airport_footprint(from, to,
                                         flightClass = class,
                                         output="co2e"))
-                                        }
+
 }

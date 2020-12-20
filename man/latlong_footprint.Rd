@@ -50,7 +50,6 @@ latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First")
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, "First", "ch4")
 latlong_footprint(34.052235, -118.243683, 35.179554, 129.075638, output = "ch4")
 
-\dontrun{
 # Calculations based on a data frame of flight
 library(dplyr)
 library(tibble)
@@ -68,5 +67,4 @@ travel_data \%>\%
                                        arrival_lat,
                                        arrival_long,
                                        output="co2e"))
-  }
 }
