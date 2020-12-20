@@ -4,6 +4,10 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/acircleda/footprint/workflows/R-CMD-check/badge.svg)](https://github.com/acircleda/footprint/actions)
+[![Codecov test
+coverage](https://codecov.io/gh/acircleda/footprint/branch/master/graph/badge.svg)](https://codecov.io/gh/acircleda/footprint?branch=master)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/footprint)](https://CRAN.R-project.org/package=footprint)
 <!-- badges: end -->
 
 # footprint
@@ -79,7 +83,6 @@ data:
 
 ``` r
 library(tibble)
-#> Warning: package 'tibble' was built under R version 3.6.3
 
 travel_data <- tibble(
   name = c("Mike", "Will", "Elle"),
@@ -89,7 +92,7 @@ travel_data <- tibble(
 ```
 
 | name | from | to  |
-| :--- | :--- | :-: |
+| :--- | :--- | :-- |
 | Mike | LAX  | PUS |
 | Will | LGA  | LHR |
 | Elle | TYS  | TPA |
@@ -99,7 +102,7 @@ emissions for each trip. The following function calculates an estimate
 for CO<sub>2</sub> (carbon dioxide with radiative forcing).
 
 | name | from | to  | emissions |
-| :--- | :--- | :-: | --------: |
+| :--- | :--- | :-- | --------: |
 | Mike | LAX  | PUS |  1434.663 |
 | Will | LGA  | LHR |   825.497 |
 | Elle | TYS  | TPA |   136.721 |
