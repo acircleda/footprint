@@ -32,7 +32,7 @@ remotes::install_github("acircleda/footprint")
 Package `footprint` uses the the Haversine great-circle distance formula
 to calculate distance between airports or distance between latitude and
 longitude pairs. This distance is then used to derive a carbon footprint
-estimate, which is based on converstion factors from the Department for
+estimate, which is based on conversion factors from the Department for
 Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion
 Factors for Business Travel (air):
 <https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019>.
@@ -83,6 +83,7 @@ data:
 
 ``` r
 library(tibble)
+#> Warning: package 'tibble' was built under R version 4.0.3
 
 travel_data <- tibble(
   name = c("Mike", "Will", "Elle"),
