@@ -1,9 +1,9 @@
 #' Calculate flight emissions based on airport code pairs
 #'
-#'@description A function that calculates emissions per flight based on pairs of IATA airport codes, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
+#'@description A function that calculates emissions per flight based on pairs of three-letter airport codes, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
 #'
-#' @param departure a character vector naming one or more three-letter IATA airport codes for outbound destination
-#' @param arrival a character vector naming one or more three-letter IATA airport codes for inbound destination
+#' @param departure a character vector naming one or more three-letter IATA (International Air Transport Association) airport codes for outbound destination
+#' @param arrival a character vector naming one or more three-letter IATA (International Air Transport Association) airport codes for inbound destination
 #' @param flightClass a character vector naming one or more flight class categories. Must be of the following "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default and represents the average passenger.
 #' @param output a single character argument naming the emissions metric of the output. For metrics that include radiative forcing, one of
 #' - "co2e" (carbon dioxide equivalent with radiative forcing) - default
@@ -27,21 +27,21 @@
 #' airport_footprint("LAX", "LHR", "First", "ch4")
 #' airport_footprint("LAX", "LHR", output = "ch4")
 #'
-#'\dontrun{
 #' # Calculations based on a data frame of flights
 #' library(dplyr)
-#' travel_data <- data.frame(name=c("Mike", "Will", "Elle"),
-#'                           from=c("LAX", "LGA", "TYS"),
-#'                          to=c("PUS", "LHR", "TPA"),
-#'                          class=c("Economy", "Economy+", "Business")
-#'                          )
+#' library(tibble)
+#'
+#' travel_data <- tribble(~name, ~from, ~to, ~class,
+#'                       "Mike", "LAX", "PUS", "Economy",
+#'                       "Will", "LGA", "LHR", "Economy+",
+#'                       "Elle", "TYS", "TPA", "Business")
 #'
 #' travel_data %>%
 #'    rowwise() %>%
 #'    mutate(emissions = airport_footprint(from, to,
 #'                                         flightClass = class,
 #'                                         output="co2e"))
-#'                                         }
+#'
 
 airport_footprint <-
   function(departure,

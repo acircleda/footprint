@@ -7,9 +7,9 @@
 airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
 }
 \arguments{
-\item{departure}{a character vector naming one or more three-letter IATA airport codes for outbound destination}
+\item{departure}{a character vector naming one or more three-letter IATA (International Air Transport Association) airport codes for outbound destination}
 
-\item{arrival}{a character vector naming one or more three-letter IATA airport codes for inbound destination}
+\item{arrival}{a character vector naming one or more three-letter IATA (International Air Transport Association) airport codes for inbound destination}
 
 \item{flightClass}{a character vector naming one or more flight class categories. Must be of the following "Unknown" "Economy", "Economy+", "Business" or "First". If no argument is included, "Unknown" is the default and represents the average passenger.}
 
@@ -26,7 +26,7 @@ airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
 a numeric value expressed in kilograms of chosen metric
 }
 \description{
-A function that calculates emissions per flight based on pairs of IATA airport codes, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
+A function that calculates emissions per flight based on pairs of three-letter airport codes, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
 }
 \details{
 Distances between airports are based on the Haversine great-circle distane formula, which assumes a spherical earth. They are calculated using the \code{airportr} package. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
@@ -39,19 +39,19 @@ airport_footprint("LAX", "LHR", "First")
 airport_footprint("LAX", "LHR", "First", "ch4")
 airport_footprint("LAX", "LHR", output = "ch4")
 
-\dontrun{
 # Calculations based on a data frame of flights
 library(dplyr)
-travel_data <- data.frame(name=c("Mike", "Will", "Elle"),
-                          from=c("LAX", "LGA", "TYS"),
-                         to=c("PUS", "LHR", "TPA"),
-                         class=c("Economy", "Economy+", "Business")
-                         )
+library(tibble)
+
+travel_data <- tribble(~name, ~from, ~to, ~class,
+                      "Mike", "LAX", "PUS", "Economy",
+                      "Will", "LGA", "LHR", "Economy+",
+                      "Elle", "TYS", "TPA", "Business")
 
 travel_data \%>\%
    rowwise() \%>\%
    mutate(emissions = airport_footprint(from, to,
                                         flightClass = class,
                                         output="co2e"))
-                                        }
+
 }

@@ -36,7 +36,13 @@ remotes::install_github("acircleda/footprint")
 
 ## Data and Methodology
 
-Package `footprint` uses the the Haversine great-circle distance formula to calculate distance between airports or distance between latitude and longitude pairs. This distance is then used to derive a carbon footprint estimate, which is based on converstion factors from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019.
+Package `footprint` uses the the Haversine great-circle distance formula
+to calculate distance between airports or distance between latitude and
+longitude pairs. This distance is then used to derive a carbon footprint
+estimate, which is based on conversion factors from the Department for
+Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion
+Factors for Business Travel (air):
+<https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019>.
 
 ## Example Usage
 
@@ -55,7 +61,7 @@ You can use pairs of three-letter IATA airport codes to calculate distance. This
 
 The example below calculates a simple footprint estimation for an economy flight from Los Angeles International (LAX) to Heathrow (LHR). The estimate will be in CO~2~e (carbon dioxide equivalent, including radiative forcing). The output is always in kilograms.
 
-```{r}
+```{r, warning=FALSE, message=FALSE, error=FALSE}
 airport_footprint("LAX", "LHR", "Economy", "co2e")
 ```
 
