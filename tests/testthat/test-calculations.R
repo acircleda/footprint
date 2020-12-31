@@ -2,7 +2,7 @@ test_that("airport_footprint() works",
           {
             tol = 0.1
             expect_equal(airport_footprint("LAX", "PUS"), 1882.79, tolerance = tol)
-            expect_equal(airport_footprint("LAX", "PUS", output = "n20"),
+            expect_equal(airport_footprint("LAX", "PUS", output = "n2o"),
                          9.336,
                          tolerance = tol)
             expect_equal(airport_footprint("LAX", "PUS", "First"),
