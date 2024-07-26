@@ -10,7 +10,8 @@ latlong_footprint(
   arrival_lat,
   arrival_long,
   flightClass = "Unknown",
-  output = "co2e"
+  output = "co2e",
+  year = 2019
 )
 }
 \arguments{
@@ -31,8 +32,9 @@ latlong_footprint(
 \item "ch4" (methane with radiative forcing)
 \item "n2o" (nitrous oxide with radiative forcing)
 \item Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n2o_norf".
-#'
 }}
+
+\item{year}{A numeric or string representing a year between 2019-2024, inclusive. Default is 2019.}
 }
 \value{
 a numeric value expressed in kilograms of chosen metric
@@ -41,7 +43,7 @@ a numeric value expressed in kilograms of chosen metric
 A function that calculates emissions per flight based on longitude and latitude, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
 }
 \details{
-Distances between latitude and longitude pairs are based on the Haversine great-circle distance formula, which assumes a spherical earth. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
+Distances between latitude and longitude pairs are based on the Haversine great-circle distance formula, which assumes a spherical earth. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) Greenhouse Gas Conversion Factors for Business Travel (air). These factors vary by year, which can be acounted for by the \code{year} argument.
 }
 \examples{
 # Calculations based on individual flights
@@ -60,8 +62,8 @@ travel_data <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~ar
      # New York -> London
      "Will", 40.712776, -74.005974, 51.52, -0.10)
 
-travel_data \%>\%
-  rowwise() \%>\%
+travel_data |>
+  rowwise() |>
   mutate(emissions = latlong_footprint(departure_lat,
                                        departure_long,
                                        arrival_lat,

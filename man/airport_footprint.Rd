@@ -4,7 +4,13 @@
 \alias{airport_footprint}
 \title{Calculate flight emissions based on airport code pairs}
 \usage{
-airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
+airport_footprint(
+  departure,
+  arrival,
+  flightClass = "Unknown",
+  output = "co2e",
+  year = 2019
+)
 }
 \arguments{
 \item{departure}{a character vector naming one or more three-letter IATA (International Air Transport Association) airport codes for outbound destination}
@@ -21,6 +27,8 @@ airport_footprint(departure, arrival, flightClass = "Unknown", output = "co2e")
 \item "n2o" (nitrous oxide with radiative forcing)
 \item Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n2o_norf".
 }}
+
+\item{year}{A numeric or string representing a year between 2019-2024, inclusive. Default is 2019.}
 }
 \value{
 a numeric value expressed in kilograms of chosen metric
@@ -29,7 +37,7 @@ a numeric value expressed in kilograms of chosen metric
 A function that calculates emissions per flight based on pairs of three-letter airport codes, flight classes, and emissions metrics. Emissions are returned in kilograms of the chosen metric.
 }
 \details{
-Distances between airports are based on the Haversine great-circle distane formula, which assumes a spherical earth. They are calculated using the \code{airportr} package. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
+Distances between airports are based on the Haversine great-circle distane formula, which assumes a spherical earth. They are calculated using the \code{airportr} package. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) Greenhouse Gas Conversion Factors for Business Travel (air). These factors vary by year, which can be acounted for by the \code{year} argument.
 }
 \examples{
 
@@ -48,8 +56,8 @@ travel_data <- tribble(~name, ~from, ~to, ~class,
                       "Will", "LGA", "LHR", "Economy+",
                       "Elle", "TYS", "TPA", "Business")
 
-travel_data \%>\%
-   rowwise() \%>\%
+travel_data |>
+   rowwise() |>
    mutate(emissions = airport_footprint(from, to,
                                         flightClass = class,
                                         output="co2e"))
