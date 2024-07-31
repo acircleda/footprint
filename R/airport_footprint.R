@@ -11,9 +11,9 @@
 #' - "ch4" (methane with radiative forcing)
 #' - "n2o" (nitrous oxide with radiative forcing)
 #' - Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n2o_norf".
-#'
+#' @param year A numeric or string representing a year between 2019-2024, inclusive. Default is 2019.
 #' @return a numeric value expressed in kilograms of chosen metric
-#' @details Distances between airports are based on the Haversine great-circle distane formula, which assumes a spherical earth. They are calculated using the `airportr` package. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
+#' @details Distances between airports are based on the Haversine great-circle distane formula, which assumes a spherical earth. They are calculated using the `airportr` package. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) Greenhouse Gas Conversion Factors for Business Travel (air). These factors vary by year, which can be acounted for by the `year` argument.
 #' @importFrom rlang .data
 #' @import airportr
 #'
@@ -36,8 +36,8 @@
 #'                       "Will", "LGA", "LHR", "Economy+",
 #'                       "Elle", "TYS", "TPA", "Business")
 #'
-#' travel_data %>%
-#'    rowwise() %>%
+#' travel_data |>
+#'    rowwise() |>
 #'    mutate(emissions = airport_footprint(from, to,
 #'                                         flightClass = class,
 #'                                         output="co2e"))
@@ -47,7 +47,8 @@ airport_footprint <-
   function(departure,
            arrival,
            flightClass = "Unknown",
-           output = "co2e") {
+           output = "co2e",
+           year = 2019) {
 
     if (!all(is.character(c(departure, arrival)))) {
       stop("Airport IATA codes must be a character string")
@@ -60,6 +61,17 @@ airport_footprint <-
     if (!all(grepl("^([A-Za-z]{2,3})", c(departure, arrival)))) {
       stop("Invalid IATA codes: make sure they consist only of letters")
     }
+
+    if(as.numeric(year) < min(conversion_factors$year)){
+      stop("Argument year must be between the years 2019 to 2024, inclusive")
+    }
+
+    if(as.numeric(year) > max(conversion_factors$year)){
+      stop("Argument year must be between the years 2019 to 2024, inclusive")
+    }
+
+
+    year_input <- as.character(year)
 
     departure <- toupper(departure)
     arrival <- toupper(arrival)
@@ -75,9 +87,10 @@ airport_footprint <-
                        TRUE ~ "medium")
 
     #find correct calculation value
-    emissions_vector <-  conversion_factors %>%
-      dplyr::filter(.data$distance == distance_type) %>%
-      dplyr::filter(.data$flightclass == flightClass) %>%
+    emissions_vector <-  conversion_factors |>
+      dplyr::filter(.data$year == year_input) |>
+      dplyr::filter(.data$distance == distance_type) |>
+      dplyr::filter(.data$flightclass == flightClass) |>
       dplyr::pull(output)
 
     #calculate output

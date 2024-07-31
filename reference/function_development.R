@@ -4,8 +4,7 @@ library(airportr)
 
 # requried data ----
 
-  # from https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019 - "Conversion factors 2019: full set (for advanced users)" - Business Air Travel tab
-load("R/calculations.Rdata")
+load("R/sysdata.rda")
 
 data(airports) #from `airportr`
 
@@ -34,7 +33,8 @@ data(airports) #from `airportr`
         # note: co2e vs co2 https://ecometrica.com/assets/GHGs-CO2-CO2e-and-Carbon-What-Do-These-Mean-v2.1.pdf
 
 
-    airport_footprint <- function(departure, arrival, flightClass = "Unknown", output = "co2e") {
+    airport_footprint <- function(departure, arrival, flightClass = "Unknown",
+                                  output = "co2e", year=2019) {
 
       #get distance in km
       distance_vector <- airport_distance(departure, arrival)
@@ -46,8 +46,11 @@ data(airports) #from `airportr`
       #set flight class
       flightclass_vector <- flightClass
 
+      # reformat year
+      year_fmt <- as.character(year)
       #find correct calculation value
-      emissions_table <- calculations %>%
+      emissions_table <- conversion_factors %>%
+        filter(year == year_fmt) |>
         filter(distance == distance_type) %>%
         filter(flightclass == flightclass_vector) %>%
         select(output) %>%
@@ -69,7 +72,7 @@ data(airports) #from `airportr`
 
     travel_data %>%
       rowwise() %>% #anyway to include this in function?
-      mutate(emissions = airport_footprint(from, to, output="co2e"))
+      mutate(emissions = airport_footprint(from, to, output="co2e", year=2024))
 
 
 # emissions calculations based on longitude/lattitude ----

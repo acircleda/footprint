@@ -1,6 +1,6 @@
 Package: footprint
 Title: Calculate Air Travel Emissions
-Version: 0.1
+Version: 0.2
 Authors@R: 
     c(person(given = "Anthony",
              family = "Schmidt",
@@ -26,18 +26,16 @@ Depends:
 Imports: 
     airportr,
     dplyr,
-    magrittr,
     rlang
 Suggests: 
     devtools,
     knitr,
     rmarkdown,
     testthat (>= 2.1.0),
-    tibble,
-    covr
+    tibble
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.1

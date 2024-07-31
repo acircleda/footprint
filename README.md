@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/acircleda/footprint/workflows/R-CMD-check/badge.svg)](https://github.com/acircleda/footprint/actions)
@@ -43,6 +42,17 @@ Load `footprint` using
 
 ``` r
 library(footprint)
+library(tidyverse)
+#> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+#> ✔ dplyr     1.1.4     ✔ readr     2.1.5
+#> ✔ forcats   1.0.0     ✔ stringr   1.5.1
+#> ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+#> ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+#> ✔ purrr     1.0.2     
+#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+#> ✖ dplyr::filter() masks stats::filter()
+#> ✖ dplyr::lag()    masks stats::lag()
+#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 ```
 
 ### Using Airport Codes
@@ -83,7 +93,6 @@ data:
 
 ``` r
 library(tibble)
-#> Warning: package 'tibble' was built under R version 4.0.3
 
 travel_data <- tibble(
   name = c("Mike", "Will", "Elle"),
@@ -93,7 +102,7 @@ travel_data <- tibble(
 ```
 
 | name | from | to  |
-| :--- | :--- | :-- |
+|:-----|:-----|:----|
 | Mike | LAX  | PUS |
 | Will | LGA  | LHR |
 | Elle | TYS  | TPA |
@@ -103,10 +112,34 @@ emissions for each trip. The following function calculates an estimate
 for CO<sub>2</sub> (carbon dioxide with radiative forcing).
 
 | name | from | to  | emissions |
-| :--- | :--- | :-- | --------: |
+|:-----|:-----|:----|----------:|
 | Mike | LAX  | PUS |  1434.663 |
 | Will | LGA  | LHR |   825.497 |
 | Elle | TYS  | TPA |   136.721 |
+
+#### Calculating More than One Trip and Different years
+
+We can calculate the footprint for multiple itineraries at the same time
+and add to an existing data frame using `mutate`. Here is some example
+data:
+
+``` r
+library(tibble)
+
+travel_data <- tibble(
+  name = c("Mike", "Will", "Elle", "Elle"),
+  from = c("LAX", "LGA", "TYS", "TYS"),
+  to = c("PUS", "LHR", "TPA", "TPA"),
+  date = c("2024-04-05", "2023-04-02", "2024-06-12", "2019-06-12")
+)
+```
+
+| name | from | to  | date       | emissions |
+|:-----|:-----|:----|:-----------|----------:|
+| Mike | LAX  | PUS | 2024-04-05 |  1916.380 |
+| Will | LGA  | LHR | 2023-04-02 |  1102.675 |
+| Elle | TYS  | TPA | 2024-06-12 |   160.553 |
+| Elle | TYS  | TPA | 2019-06-12 |   136.721 |
 
 ## From Latitude and Longitude
 
@@ -146,23 +179,23 @@ travel_data2 <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~a
         "Will", 40.712776, -74.005974, 51.52, -0.10)
 ```
 
-| name | departure\_lat | departure\_long | arrival\_lat | arrival\_long |
-| :--- | -------------: | --------------: | -----------: | ------------: |
-| Mike |       34.05224 |     \-118.24368 |     35.17955 |      129.0756 |
-| Will |       40.71278 |      \-74.00597 |     51.52000 |      \-0.1000 |
+| name | departure_lat | departure_long | arrival_lat | arrival_long |
+|:-----|--------------:|---------------:|------------:|-------------:|
+| Mike |      34.05224 |     -118.24368 |    35.17955 |     129.0756 |
+| Will |      40.71278 |      -74.00597 |    51.52000 |      -0.1000 |
 
 And here is code to apply it to a dataframe:
 
 ``` r
-travel_data2 %>%
-  rowwise() %>%
+travel_data2 |>
+  rowwise() |>
   mutate(emissions = latlong_footprint(departure_lat,
                                        departure_long,
                                        arrival_lat,
                                        arrival_long))
 ```
 
-| name | departure\_lat | departure\_long | arrival\_lat | arrival\_long | emissions |
-| :--- | -------------: | --------------: | -----------: | ------------: | --------: |
-| Mike |       34.05224 |     \-118.24368 |     35.17955 |      129.0756 |  1881.589 |
-| Will |       40.71278 |      \-74.00597 |     51.52000 |      \-0.1000 |  1090.260 |
+| name | departure_lat | departure_long | arrival_lat | arrival_long | emissions |
+|:-----|--------------:|---------------:|------------:|-------------:|----------:|
+| Mike |      34.05224 |     -118.24368 |    35.17955 |     129.0756 |  1881.589 |
+| Will |      40.71278 |      -74.00597 |    51.52000 |      -0.1000 |  1090.260 |

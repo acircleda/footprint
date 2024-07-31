@@ -29,7 +29,7 @@ The goal of footprint is to calculate carbon footprints from air travel based on
 
 You can install the development version from [GitHub](https://github.com/) with:
 
-```{r, warning=FALSE, message=FALSE, error=FALSE}
+```{r, warning=FALSE, message=FALSE, error=FALSE, eval=FALSE}
 # install.packages("remotes")
 remotes::install_github("acircleda/footprint")
 ```
@@ -50,6 +50,7 @@ Load `footprint` using
 
 ```{r}
 library(footprint)
+library(tidyverse)
 ```
 
 
@@ -90,22 +91,51 @@ travel_data <- tibble(
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 library(dplyr)
 
-travel_data %>%
+travel_data |>
   knitr::kable()
 ```
 
 Here is how you can take the `from` and `to` data and calculate emissions for each trip. The following function calculates an estimate for CO~2~ (carbon dioxide with radiative forcing).
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-travel_data %>%
-  rowwise() %>%
+travel_data |>
+  rowwise() |>
   mutate(emissions = airport_footprint(from, to, "Economy", output = "co2"))
 ```
 
 ```{r echo=FALSE}
-travel_data %>%
-  rowwise() %>%
-  mutate(emissions = airport_footprint(from, to, "Economy", output = "co2")) %>%
+travel_data |>
+  rowwise() |>
+  mutate(emissions = airport_footprint(from, to, "Economy", output = "co2")) |>
+  knitr::kable()
+```
+
+
+#### Calculating More than One Trip and Different years
+
+We can calculate the footprint for multiple itineraries at the same time and add to an existing data frame using `mutate`. Here is some example data:
+
+```{r}
+library(tibble)
+
+travel_data <- tibble(
+  name = c("Mike", "Will", "Elle", "Elle"),
+  from = c("LAX", "LGA", "TYS", "TYS"),
+  to = c("PUS", "LHR", "TPA", "TPA"),
+  date = c("2024-04-05", "2023-04-02", "2024-06-12", "2019-06-12")
+)
+```
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+travel_data |>
+  rowwise() |>
+  mutate(emissions = airport_footprint(from, to, "Economy", output = "co2", year=year(date)))
+```
+
+```{r echo=FALSE}
+travel_data |>
+  rowwise() |>
+  mutate(emissions = airport_footprint(from, to, "Economy", output = "co2", year=year(date))) |>
   knitr::kable()
 ```
 
@@ -136,14 +166,14 @@ travel_data2 <- tribble(~name, ~departure_lat, ~departure_long, ~arrival_lat, ~a
 ```
 
 ```{r echo=FALSE}
-travel_data2 %>% knitr::kable()
+travel_data2 |> knitr::kable()
 ```
 
 And here is code to apply it to a dataframe:
 
 ```{r eval=FALSE, include=TRUE}
-travel_data2 %>%
-  rowwise() %>%
+travel_data2 |>
+  rowwise() |>
   mutate(emissions = latlong_footprint(departure_lat,
                                        departure_long,
                                        arrival_lat,
@@ -151,12 +181,12 @@ travel_data2 %>%
 ```
 
 ```{r echo=FALSE}
-travel_data2 %>%
-  rowwise() %>%
+travel_data2 |>
+  rowwise() |>
   mutate(emissions = latlong_footprint(departure_lat,
                                        departure_long,
                                        arrival_lat,
-                                       arrival_long)) %>%
+                                       arrival_long)) |>
   knitr::kable()
 ```
 

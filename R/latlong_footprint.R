@@ -13,9 +13,9 @@
 #' - "ch4" (methane with radiative forcing)
 #' - "n2o" (nitrous oxide with radiative forcing)
 #' - Metrics without radiative forcing: "co2e_norf", "co2_norf", "ch4_norf", or "n2o_norf".
-#' #'
+#' @param year A numeric or string representing a year between 2019-2024, inclusive. Default is 2019.
 #' @return a numeric value expressed in kilograms of chosen metric
-#' @details Distances between latitude and longitude pairs are based on the Haversine great-circle distance formula, which assumes a spherical earth. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) 2019 Greenhouse Gas Conversion Factors for Business Travel (air): https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2019
+#' @details Distances between latitude and longitude pairs are based on the Haversine great-circle distance formula, which assumes a spherical earth. The carbon footprint estimates are derived from the Department for Environment, Food & Rural Affairs (UK) Greenhouse Gas Conversion Factors for Business Travel (air). These factors vary by year, which can be acounted for by the `year` argument.
 #' @importFrom rlang .data
 #'
 #' @export
@@ -37,8 +37,8 @@
 #'      # New York -> London
 #'      "Will", 40.712776, -74.005974, 51.52, -0.10)
 #'
-#'travel_data %>%
-#'   rowwise() %>%
+#'travel_data |>
+#'   rowwise() |>
 #'   mutate(emissions = latlong_footprint(departure_lat,
 #'                                        departure_long,
 #'                                        arrival_lat,
@@ -51,7 +51,8 @@ latlong_footprint <-
            arrival_lat,
            arrival_long,
            flightClass = "Unknown",
-           output = "co2e") {
+           output = "co2e",
+           year = 2019) {
 
     # input valudation
     if (!(all(is.numeric(c(departure_long, arrival_long))) &&
@@ -70,6 +71,14 @@ latlong_footprint <-
       stop("Airport latitude must be numeric and has values between -90 and 90")
     }
 
+    if(as.numeric(year) < min(conversion_factors$year)){
+      stop("Argument year must be between the years 2019 to 2024, inclusive")
+    }
+
+    if(as.numeric(year) > max(conversion_factors$year)){
+      stop("Argument year must be between the years 2019 to 2024, inclusive")
+    }
+
     # calculate distance (method from airportr)
     lon1 = departure_long * pi / 180
     lat1 = departure_lat * pi / 180
@@ -82,6 +91,8 @@ latlong_footprint <-
     b = 2 * atan2(sqrt(a), sqrt(1 - a))
     distance = radius * b # in km
 
+    year_input <- as.character(year)
+
     #get distance type (long, short, domestic/medium)
     distance_type <-
       dplyr::case_when(distance <= 483 ~ "short",
@@ -89,9 +100,10 @@ latlong_footprint <-
                        TRUE ~ "medium")
 
     #find correct calculation value
-    emissions_vector <-  conversion_factors %>%
-      dplyr::filter(.data$distance == distance_type) %>%
-      dplyr::filter(.data$flightclass == flightClass) %>%
+    emissions_vector <-  conversion_factors |>
+      dplyr::filter(.data$year == year_input) |>
+      dplyr::filter(.data$distance == distance_type) |>
+      dplyr::filter(.data$flightclass == flightClass) |>
       dplyr::pull(output)
 
     #calculate output

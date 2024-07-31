@@ -15,6 +15,17 @@ test_that("airport_footprint() works",
             expect_error(airport_footprint("LAX"))
             expect_error(airport_footprint("LAX", "1HR"))
             expect_error(airport_footprint("LAXX", "LHR"))
+            # test years
+            expect_no_error(airport_footprint("LAX", "LHR", year=2020))
+            expect_no_error(airport_footprint("LAX", "LHR", year="2020"))
+            expect_error(airport_footprint("LAX", "LHR", year=2010))
+            expect_error(airport_footprint("LAX", "LHR", year=2025))
+            expect_false(
+              airport_footprint("LAX",
+                                "PUS",
+                                year=2019) == airport_footprint("LAX",
+                                                                "PUS",
+                                                                year=2024))
           })
 
 test_that("latlong_footprint() works", {
@@ -29,4 +40,13 @@ test_that("latlong_footprint() works", {
   expect_error(latlong_footprint(34.052235,-118.243683, 35.179554))
   expect_error(latlong_footprint(100.052235,-118.243683, 35.179554, 129.075638))
   expect_error(latlong_footprint(34.052235, -181.243683, 35.179554, 129.075638))
+  #years
+  expect_no_error(latlong_footprint(34.052235,-118.243683, 35.179554, 129.075638, year=2020))
+  expect_no_error(latlong_footprint(34.052235,-118.243683, 35.179554, 129.075638, year="2020"))
+  expect_error(latlong_footprint(34.052235,-118.243683, 35.179554, 129.075638, year=2010))
+  expect_error(latlong_footprint(34.052235,-118.243683, 35.179554, 129.075638, year=2025))
+  expect_false(
+    latlong_footprint(34.052235,-118.243683, 35.179554, 129.075638, year=2019) ==
+      latlong_footprint(34.052235,-118.243683, 35.179554, 129.075638, year=2024)
+  )
 })
