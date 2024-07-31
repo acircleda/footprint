@@ -3,8 +3,6 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/acircleda/footprint/workflows/R-CMD-check/badge.svg)](https://github.com/acircleda/footprint/actions)
-[![Codecov test
-coverage](https://codecov.io/gh/acircleda/footprint/branch/master/graph/badge.svg)](https://codecov.io/gh/acircleda/footprint?branch=master)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/footprint)](https://CRAN.R-project.org/package=footprint)
 <!-- badges: end -->
